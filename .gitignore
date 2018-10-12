@@ -65,4 +65,4 @@ target/
 .idea
 
 # Custom files
-/configs.json
+# /configs.json
