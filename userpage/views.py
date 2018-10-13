@@ -5,7 +5,6 @@ from wechat.models import User
 
 
 class UserBind(APIView):
-
     def validate_user(self):
         """
         input: self.input['student_id'] and self.input['password']
@@ -15,7 +14,7 @@ class UserBind(APIView):
 
     def get(self):
         self.check_input('openid')
-        return User.get_by_openid(self.input['openid']).student_id
+        return User.get_by_openid(self.input(['openid'])).student_id
 
     def post(self):
         self.check_input('openid', 'student_id', 'password')
