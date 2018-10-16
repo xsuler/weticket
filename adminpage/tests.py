@@ -1,7 +1,7 @@
 from django.test import TestCase
 from codex.baseerror import InputError, LogicError, ValidateError, NotExistError
 from wechat.models import Activity
-from adminpage.views import ActivityList, ActivityDelete, ActivityDetail, ActivityCreate
+from adminpage.views import ActivityList, ActivityDelete, ActivityDetail, ActivityCreate, ActivityMenu, ActivityCheckin
 import datetime
 
 class ActivityListTestCase(TestCase):

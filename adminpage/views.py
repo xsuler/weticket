@@ -2,6 +2,9 @@ from codex.baseview import APIView
 from codex.baseerror import InputError, LogicError, ValidateError, NotExistError
 
 from wechat.models import Activity, Ticket
+from wechat.views import CustomWeChatView
+from wechat.wrapper import WeChatLib
+from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
 
 from django.db.models import Q
 import time
@@ -142,3 +145,42 @@ class ActivityCreate(APIView):
             self.dict_to_new_activity()
         except:
             raise InputError("activity create error: fail to create new activity")
+
+class ActivityMenu(APIView):
+
+    # convert an Activity instance to a dict instance
+    def activity_to_dict(self, activity, menu_id_list):
+        activity_dict = {}
+        activity_dict['id'] = activity.id
+        activity_dict['name'] = activity.name
+        if activity.id in menu_id_list:
+            activity['menuIndex'] = menu_id_list.index(activity.id) + 1
+        else:
+            activity['menuIndex'] = 0
+        return activity_dict
+
+    def get_menu_list(self):
+        menu_list = CustomWeChatView.lib.get_wechat_menu()
+        menu_book_list = []
+        for btn in menu_list:
+            if btn['name'] == '抢票':
+                menu_book_list += btn.get('sub_button', list())
+        menu_id_list = []
+        for btn in menu_book_list:
+            if 'key' in btn:
+                activity_id = btn['key']
+                if activity_id.startwith(CustomWeChatView.event_keys['book_header']):
+                    activity_id = activity_id[len(CustomWeChatView.event_keys['book_header']):]
+                if activity_id and activity_id.isdigit():
+                    menu_id_list.append(int(activity_id))
+
+    def get(self):
+        pass
+
+    def post(self):
+        pass
+
+class ActivityCheckin(APIView):
+
+    def post(self):
+        pass
