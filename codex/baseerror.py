@@ -38,3 +38,12 @@ class NotExistError(BaseError):
 
     def __init__(self, msg):
         super(NotExistError, self).__init__(4, msg)
+class AdminAuthError(BaseError):
+
+    def __init__(self, msg):
+        super(AdminAuthError, self).__init__(4, msg)
+
+class AdminNotLogin(BaseError):
+
+    def __init__(self, msg):
+        super(AdminNotLogin, self).__init__(4, msg)

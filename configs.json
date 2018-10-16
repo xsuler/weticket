@@ -1,14 +1,14 @@
 {
-  "SECRET_KEY": "ThismsARandomStringtithLength=50!-!---------------",
-  "DEBUG": true,
-  "IGNORE_WECHAT_SIGNATURE": false,
-  "WECHAT_TOKEN": "aAsdkc!w2566SDXww_=aDDadajkn54",
-  "WECHAT_APPID": "wx076962edb984e6ca",
-  "WECHAT_SECRET": "75946763cab56e5a76d0a319270e9f54",
-  "DB_NAME": "wechat_ticket",
-  "DB_USER": "root",
-  "DB_PASS": "wszhoucy16",
-  "DB_HOST": "127.0.0.1",
-  "DB_PORT": "3306",
-  "SITE_DOMAIN": "http://your.domain"
+    "SECRET_KEY": "ThismsARandomStringtithLength=50!-!---------------",
+    "DEBUG": true,
+    "IGNORE_WECHAT_SIGNATURE": false,
+    "WECHAT_TOKEN": "",
+    "WECHAT_APPID": "",
+    "WECHAT_SECRET": "",
+    "DB_NAME": "wechat_ticket",
+    "DB_USER": "root",
+    "DB_PASS": "",
+    "DB_HOST": "localhost",
+    "DB_PORT": "3306",
+    "SITE_DOMAIN": ""
 }
