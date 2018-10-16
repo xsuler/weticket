@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^activity/list?$', ActivityList.as_view(), name="activity_list"),
     url(r'^activity/delete?$', ActivityDelete.as_view(), name="activity_delete"),
     url(r'^activity/detail?$', ActivityDetail.as_view(), name="activity_detail"),
+    url(r'^activity/create?$', ActivityCreate.as_view(), name="activity_create"),
 ]

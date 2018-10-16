@@ -1,7 +1,7 @@
 from django.test import TestCase
 from codex.baseerror import InputError, LogicError, ValidateError, NotExistError
 from wechat.models import Activity
-from adminpage.views import ActivityList, ActivityDelete, ActivityDetail
+from adminpage.views import ActivityList, ActivityDelete, ActivityDetail, ActivityCreate
 import datetime
 
 class ActivityListTestCase(TestCase):
@@ -12,21 +12,21 @@ class ActivityListTestCase(TestCase):
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=2, name="a_l_test_2", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=3, name="a_l_test_3", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="", remain_tickets=10)
 
     def testActivityList(self):
         activity_list = ActivityList().get()
@@ -49,14 +49,14 @@ class ActivityDeleteTestCase(TestCase):
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=2, name="a_l_test_2", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=3, name="a_l_test_3", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
@@ -64,7 +64,7 @@ class ActivityDeleteTestCase(TestCase):
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
                                 total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="",
-                                remain_tickets=10).save()
+                                remain_tickets=10)
 
     def ActivityDelete_simulation(self, id):
         ActivityDelete_simulation = ActivityDelete()
@@ -138,14 +138,14 @@ class ActivityDetailTestCase(TestCase):
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=2, name="a_l_test_2", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
                                 place="place",
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
-                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10).save()
+                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10)
         Activity.objects.create(id=3, name="a_l_test_3", key="key", description="description",
                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
@@ -153,7 +153,7 @@ class ActivityDetailTestCase(TestCase):
                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
                                 total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="",
-                                remain_tickets=10).save()
+                                remain_tickets=10)
 
     def ActivityDetail_get_simulation(self, id):
         ActivityDetail_get_simulation = ActivityDetail()
@@ -198,7 +198,32 @@ class ActivityDetailTestCase(TestCase):
         Activity.objects.get(id=2).delete()
         Activity.objects.get(id=3).delete()
 
+class ActivityCreateTestCase(TestCase):
+    dict_1 = {
+        'name': "name_1",
+        'key': "key_1",
+        'place': "place_1",
+        'description': "description",
+        'picUrl': "",
+        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
+        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
+        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+        'totalTickets': 10,
+        'status': Activity.STATUS_SAVED
+    }
 
+    def setUp(self):
+        pass
 
+    def ActivityCreate_post_simulation(self, dict):
+        ActivityCreate_simulation = ActivityCreate()
+        ActivityCreate_simulation.input = dict
+        return ActivityCreate_simulation
 
+    def testActivityCreate(self):
+        self.ActivityCreate_post_simulation(self.dict_1).post()
+        self.assertEqual(Activity.objects.get(name=self.dict_1['name']).key, self.dict_1['key'])
 
+    def tearDown(self):
+        Activity.objects.get(name=self.dict_1['name']).delete()

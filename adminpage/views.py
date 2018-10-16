@@ -118,3 +118,27 @@ class ActivityDetail(APIView):
         except Activity.DoesNotExist:
             raise NotExistError("activity detail change error: not exist")
         self.dict_to_exist_activity(activity)
+
+class ActivityCreate(APIView):
+
+    def dict_to_new_activity(self):
+        Activity.objects.create(name=self.input['name'],
+                                key=self.input['key'],
+                                place=self.input['place'],
+                                description=self.input['description'],
+                                pic_url=self.input['picUrl'],
+                                start_time=self.input['startTime'],
+                                end_time=self.input['endTime'],
+                                book_start=self.input['bookStart'],
+                                book_end=self.input['bookEnd'],
+                                total_tickets=self.input['totalTickets'],
+                                status=self.input['status'],
+                                remain_tickets=self.input['totalTickets'])
+
+    def post(self):
+        self.check_input('name', 'key', 'place', 'description', 'picUrl', 'startTime', 'endTime',
+                         'bookStart', 'bookEnd', 'totalTickets', 'status')
+        try:
+            self.dict_to_new_activity()
+        except:
+            raise InputError("activity create error: fail to create new activity")
