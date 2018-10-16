@@ -33,3 +33,8 @@ class ValidateError(BaseError):
 
     def __init__(self, msg):
         super(ValidateError, self).__init__(3, msg)
+
+class NotExistError(BaseError):
+
+    def __init__(self, msg):
+        super(NotExistError, self).__init__(4, msg)

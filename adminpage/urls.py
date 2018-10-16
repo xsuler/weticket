@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 #
+from django.conf.urls import url
 
-
+from adminpage.views import *
 
 __author__ = "Epsirom"
 
 
-urlpatterns = []
+urlpatterns = [
+    url(r'^login$', AdminLogin.as_view()),
+    url(r'^activity/list?$', ActivityList.as_view(), name="activity_list"),
+    url(r'^activity/delete?$', ActivityDelete.as_view(), name="activity_delete"),
+    url(r'^activity/detail?$', ActivityDetail.as_view(), name="activity_detail"),
+]
