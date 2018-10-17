@@ -1,8 +1,60 @@
-from django.test import TestCase
-from codex.baseerror import InputError, LogicError, ValidateError, NotExistError
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from adminpage.views import *
+from codex.baseerror import *
 from wechat.models import Activity
 from adminpage.views import ActivityList, ActivityDelete, ActivityDetail, ActivityCreate, ActivityMenu, ActivityCheckin
 import datetime
+import json
+
+'''
+class AdminLoginUnitTest(TestCase):
+    # init
+    def setUp(self):
+        User.objects.create_superuser('superUser', 'super@test.com', 'super12345')
+        User.objects.create_user('ordinaryUser', 'ordinary@test.com', 'ordinary12345')
+
+    # router test
+    def test_login_url(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "superUser", "password": "super12345"})
+        self.assertEqual(response.status_code, 200)
+
+    # manager login(normal)
+    def test_login_superuser(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "superUser", "password": "super12345"})
+        response_content = response.content.decode()
+        response_content_dict = json.loads(response_content)
+        self.assertEqual(response_content_dict['code'], 0)
+
+    # ordinary user login
+    def test_login_ordinaryuser(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "ordinaryUser", "password": "ordinary12345"})
+        response_content = response.content.decode()
+        response_content_dict = json.loads(response_content)
+        self.assertEqual(response_content_dict['code'], 0)
+
+    # manager login(wrong password)
+    def test_login_superuser_wrong_password(self):
+        admin_login = AdminLoginIn()
+        admin_login.input = {"username": "superUser", "password": "ordinary12345"}
+        self.assertRaises(AdminAuthError, admin_login.post)
+
+
+class AdminLogoutTest(TestCase):
+
+    def setUp(self):
+        self.super_user = User.objects.create_superuser('superUser', 'super@test.com', 'super12345')
+        self.ordinary_user = User.objects.create_user('ordinaryUser', 'ordinary@test.com', 'ordinary12345')
+
+    # router test
+    def test_logout_url(self):
+        c = Client()
+        response = c.post('/api/a/logout', {"username": "superUser", "password": "super12345"})
+        self.assertEqual(response.status_code, 200)
+'''
 
 class ActivityListTestCase(TestCase):
     def setUp(self):
@@ -234,3 +286,78 @@ class ActivityMenuTestCase(TestCase):
 
     def tearDown(self):
         pass
+
+class ActivityCheckinTest(TestCase):
+
+    student_id = "target_student"
+    other_student_id = "other_student"
+    target_activity_id = 1
+    other_activity_id = 2
+    valid_ticket_id = "valid_ticket"
+    invalid_ticket_id = "invalid_ticket"
+
+
+    def setUp(self):
+        target_activity = Activity.objects.create(id=self.target_activity_id, name='target', key='key', place='place',
+                                                  description='description',
+                                                  start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
+                                                  pic_url="",
+                                                  end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                                  book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
+                                                  book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+                                                  total_tickets=1000, status=Activity.STATUS_PUBLISHED,
+                                                  remain_tickets=1000)
+        other_activity = Activity.objects.create(id=self.other_activity_id, name='other', key='key', place='place',
+                                                 description='description',
+                                                 start_time=datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
+                                                 pic_url="",
+                                                 end_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                                 book_start=datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
+                                                 book_end=datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+                                                 total_tickets=1000, status=Activity.STATUS_PUBLISHED,
+                                                 remain_tickets=1000)
+
+        # valid ticket
+        Ticket.objects.create(student_id=self.student_id, unique_id=self.valid_ticket_id, activity=target_activity, status=Ticket.STATUS_VALID)
+        # invalid ticket
+        Ticket.objects.create(student_id=self.student_id, unique_id=self.invalid_ticket_id, activity=target_activity, status=Ticket.STATUS_USED)
+
+    #init
+    def checkin_ticket_prepare(self, activity_id, ticket_id):
+        activity_checkin = ActivityCheckin()
+        activity_checkin.input = {'actId': activity_id, 'ticket': ticket_id}
+        return activity_checkin
+
+    def checkin_student_id_prepare(self, activity_id, student_id):
+        activity_checkin = ActivityCheckin()
+        activity_checkin.input = {'actId': activity_id, 'studentId': student_id}
+        return activity_checkin
+
+    # valid ticket
+    def test_checkin_ticket_valid(self):
+        activity_checkin = self.checkin_ticket_prepare(self.target_activity_id, self.valid_ticket_id)
+        ticket_info_dict = activity_checkin.checkTicket()
+        self.assertEqual(ticket_info_dict['ticket'], self.valid_ticket_id)
+        self.assertEqual(ticket_info_dict['studentId'], self.student_id)
+
+    # invalid ticket
+    def test_checkin_ticket_invalid(self):
+        activity_checkin = self.checkin_ticket_prepare(self.target_activity_id, self.invalid_ticket_id)
+        self.assertRaises(ValidateError, activity_checkin.checkTicket)
+
+    # unrelated activity and activity
+    def test_checkin_ticket_unrelated(self):
+        activity_checkin = self.checkin_ticket_prepare(self.other_activity_id, self.valid_ticket_id)
+        self.assertRaises(ValidateError, activity_checkin.checkTicket)
+
+    # valid student ID
+    def test_checkin_student_id_valid(self):
+        activity_checkin = self.checkin_student_id_prepare(self.target_activity_id, self.student_id)
+        ticket_info_dict = activity_checkin.checkStudentId()
+        self.assertEqual(ticket_info_dict['ticket'], self.valid_ticket_id)
+        self.assertEqual(ticket_info_dict['studentId'], self.student_id)
+
+    # invalid student ID
+    def test_checkin_student_id_invalid(self):
+        activity_checkin = self.checkin_student_id_prepare(self.target_activity_id, self.other_student_id)
+        self.assertRaises(ValidateError, activity_checkin.checkStudentId)
