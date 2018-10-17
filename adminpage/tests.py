@@ -98,10 +98,10 @@ class ActivityDetailTestCase(TestCase):
         'place': "place",
         'description': "description",
         'picUrl': "",
-        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
-        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
-        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
-        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         'totalTickets': 10,
         'status': Activity.STATUS_SAVED
     }
@@ -111,10 +111,10 @@ class ActivityDetailTestCase(TestCase):
         'place': "place",
         'description': "description",
         'picUrl': "",
-        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
-        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
-        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
-        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         'totalTickets': 10,
         'status': Activity.STATUS_PUBLISHED
     }
@@ -124,10 +124,10 @@ class ActivityDetailTestCase(TestCase):
         'place': "place",
         'description': "description",
         'picUrl': "",
-        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
-        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
-        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
-        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         'totalTickets': 10,
         'status': Activity.STATUS_PUBLISHED
     }
@@ -205,10 +205,10 @@ class ActivityCreateTestCase(TestCase):
         'place': "place_1",
         'description': "description",
         'picUrl': "",
-        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0),
-        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
-        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0),
-        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0),
+        'startTime': datetime.datetime(2018, 10, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'endTime': datetime.datetime(2018, 11, 15, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookStart': datetime.datetime(2018, 10, 13, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+        'bookEnd': datetime.datetime(2018, 10, 14, 0, 0, 0, 0).strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
         'totalTickets': 10,
         'status': Activity.STATUS_SAVED
     }

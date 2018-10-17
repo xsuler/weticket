@@ -139,8 +139,6 @@ class ActivityDetail(APIView):
         return self.activity_to_dict(activity)
 
     def post(self):
-        print(datetime.datetime.strptime(self.input['startTime'], "%Y-%m-%dT%H:%M:%S.%fZ"))
-        print(Activity.objects.get(id=self.input['id']).start_time)
         self.check_input('id', 'name', 'place', 'description', 'picUrl',
                          'startTime', 'endTime', 'bookStart', 'bookEnd',
                          'totalTickets', 'status')
@@ -169,7 +167,6 @@ class ActivityCreate(APIView):
         )
 
     def post(self):
-        print(self.input['startTime'])
         self.check_input('name', 'key', 'place', 'description', 'picUrl',
                          'startTime', 'endTime', 'bookStart', 'bookEnd',
                          'totalTickets', 'status')
