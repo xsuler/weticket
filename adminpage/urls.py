@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^activity/detail?$', ActivityDetail.as_view(), name="activity_detail"),
     url(r'^activity/create?$', ActivityCreate.as_view(), name="activity_create"),
     url(r'^image/upload?$', ImageUpload.as_view(), name="image_upload"),
+    url(r'^activity/checkin?$', ActivityCheckin.as_view()),
 ]

@@ -185,3 +185,33 @@ class ImageUpload(APIView):
         print(hd)
         return hd+self.request.get_host()+'/'+img.image.url
 
+# a/activity/checkin
+class ActivityCheckin(APIView):
+    def checkTicket(self):
+        ticket = Ticket.objects.get(unique_id=self.input['ticket'])
+        activity = Activity.objects.get(id=self.input['actId'])
+        if ticket.activity == activity and ticket.status == Ticket.STATUS_VALID:
+            ticket_info = {'ticket': self.input['ticket'], 'studentId': ticket.student_id}
+            ticket.status = Ticket.STATUS_USED
+            ticket.save()
+            return ticket_info
+        else:
+            raise ValidateError(self.input)
+
+    def checkStudentId(self):
+        ticket_list = Ticket.objects.filter(student_id=self.input['studentId'])
+        activity = Activity.objects.get(id=self.input['actId'])
+        for ticket in ticket_list:
+            if ticket.activity == activity and ticket.status == Ticket.STATUS_VALID:
+                ticket_info = {'ticket': ticket.unique_id, 'studentId': ticket.student_id}
+                ticket.status = Ticket.STATUS_USED
+                ticket.save()
+                return ticket_info
+        raise ValidateError(self.input)
+
+    def post(self):
+        self.check_input('actId')
+        if 'ticket' in self.input.keys():
+            return self.checkTicket()
+        elif 'studentId' in self.input.keys():
+            return self.checkStudentId()
