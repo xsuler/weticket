@@ -1,6 +1,9 @@
 language: python
 python:
   - "3.6"
+
+services: mysql
+
 env:
   - DJANGO=1.9.5 DB=mysql
 
@@ -8,5 +11,9 @@ install:
   - pip install -r requirements.txt
 
 before_script:
+  - mysql -e "CREATE DATABASE wechat_ticket;"  -u root 
+  - python3 manage.py makemigrations wechat
+  - python3 manage.py migrate
+
 script:
   - python manage.py test
