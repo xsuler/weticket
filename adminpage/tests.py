@@ -1,8 +1,60 @@
-from django.test import TestCase
-from codex.baseerror import InputError, LogicError, ValidateError, NotExistError
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from adminpage.views import AdminLoginIn
+from codex.baseerror import *
 from wechat.models import Activity
 from adminpage.views import ActivityList, ActivityDelete, ActivityDetail, ActivityCreate
 import datetime
+import json
+
+
+class AdminLoginUnitTest(TestCase):
+    # init
+    def setUp(self):
+        User.objects.create_superuser('superUser', 'super@test.com', 'super12345')
+        User.objects.create_user('ordinaryUser', 'ordinary@test.com', 'ordinary12345')
+
+    # router test
+    def test_login_url(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "superUser", "password": "super12345"})
+        self.assertEqual(response.status_code, 200)
+
+    # manager login(normal)
+    def test_login_superuser(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "superUser", "password": "super12345"})
+        response_content = response.content.decode()
+        response_content_dict = json.loads(response_content)
+        self.assertEqual(response_content_dict['code'], 0)
+
+    # ordinary user login
+    def test_login_ordinaryuser(self):
+        c = Client()
+        response = c.post('/api/a/login', {"username": "ordinaryUser", "password": "ordinary12345"})
+        response_content = response.content.decode()
+        response_content_dict = json.loads(response_content)
+        self.assertEqual(response_content_dict['code'], 0)
+
+    # manager login(wrong password)
+    def test_login_superuser_wrong_password(self):
+        admin_login = AdminLoginIn()
+        admin_login.input = {"username": "superUser", "password": "ordinary12345"}
+        self.assertRaises(AdminAuthError, admin_login.post)
+
+
+class AdminLogoutTest(TestCase):
+
+    def setUp(self):
+        self.super_user = User.objects.create_superuser('superUser', 'super@test.com', 'super12345')
+        self.ordinary_user = User.objects.create_user('ordinaryUser', 'ordinary@test.com', 'ordinary12345')
+
+    # router test
+    def test_logout_url(self):
+        c = Client()
+        response = c.post('/api/a/logout', {"username": "superUser", "password": "super12345"})
+        self.assertEqual(response.status_code, 200)
+
 
 class ActivityListTestCase(TestCase):
     def setUp(self):
