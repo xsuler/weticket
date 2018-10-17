@@ -11,12 +11,11 @@ class UserBind(APIView):
     def get(self):
         self.check_input('openid')
         openid=self.input['openid']
-        try:
-            user = User.get_by_openid(self.input['openid'])
-        except LogicError:
+        if User.objects.filter(open_id=self.input['openid']).exists():
+            return user.student_id
+        else:
             user=User.objects.create(open_id=self.input['openid'],student_id="")
             user.save()
-        return user.student_id
 
     def post(self):
         self.check_input('openid', 'student_id', 'password')

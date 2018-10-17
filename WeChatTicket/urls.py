@@ -22,7 +22,6 @@ from WeChatTicket.views import StaticFileView
 
 urlpatterns = [
     url(r'^wechat/?$', CustomWeChatView.as_view()),
-    url(r'^admin/', admin.site.urls),
     url(r'^api/u/', include('userpage.urls')),
     url(r'^api/a/', include('adminpage.urls')),
     url(r'^', StaticFileView.as_view()),

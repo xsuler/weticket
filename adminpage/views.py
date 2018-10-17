@@ -4,14 +4,19 @@ from wechat.models import User
 from adminpage.models import *
 from django.core.files.base import ContentFile
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from wechat.models import Activity, Ticket
 from wechat.views import CustomWeChatView
 from wechat.wrapper import WeChatLib
 from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
-
+from django.utils.decorators import method_decorator
 from django.db.models import Q
 import datetime, time
 
+class LoginRequired(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequired, self).dispatch(*args, **kwargs)
 
 class AdminLoginOut(APIView):
     def post(self):
@@ -39,7 +44,7 @@ class AdminLoginIn(APIView):
             raise AdminAuthError('admin auth error')
 
 
-class ActivityList(APIView):
+class ActivityList(LoginRequired,APIView):
 
     # convert an Activity instance to a dict instance
     def activity_to_dict(self, activity):
@@ -66,7 +71,7 @@ class ActivityList(APIView):
         return activity_list
 
 
-class ActivityDelete(APIView):
+class ActivityDelete(LoginRequired,APIView):
     def post(self):
         self.check_input('id')
         try:
@@ -79,7 +84,7 @@ class ActivityDelete(APIView):
         activity.save()
 
 
-class ActivityDetail(APIView):
+class ActivityDetail(LoginRequired,APIView):
 
     # count used tickets
     def count_used_tickets(self, activity):
@@ -149,7 +154,7 @@ class ActivityDetail(APIView):
         self.dict_to_exist_activity(activity)
 
 
-class ActivityCreate(APIView):
+class ActivityCreate(LoginRequired,APIView):
     def dict_to_new_activity(self):
         Activity.objects.create(
             name=self.input['name'],
@@ -175,7 +180,7 @@ class ActivityCreate(APIView):
         except:
             raise InputError(str(self.input))
 
-class ActivityMenu(APIView):
+class ActivityMenu(LoginRequired,APIView):
 
     # convert an Activity instance to a dict instance
     def activity_to_dict(self, activity, menu_id_list):
@@ -227,13 +232,8 @@ class ActivityMenu(APIView):
             activity_list.append(activity)
         CustomWeChatView.update_menu(activity_list)
 
-class ActivityCheckin(APIView):
 
-    def post(self):
-        pass
-
-
-class ImageUpload(APIView):
+class ImageUpload(LoginRequired,APIView):
     def post(self):
         self.check_input('image')
         img = ActivityImage.objects.create(image=self.input['image'][0])
@@ -245,7 +245,7 @@ class ImageUpload(APIView):
 
 
 # a/activity/checkin
-class ActivityCheckin(APIView):
+class ActivityCheckin(LoginRequired,APIView):
     def checkTicket(self):
         ticket = Ticket.objects.get(unique_id=self.input['ticket'])
         activity = Activity.objects.get(id=self.input['actId'])
