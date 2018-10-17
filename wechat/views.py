@@ -3,13 +3,14 @@ from wechat.wrapper import WeChatView, WeChatLib
 from wechat.handlers import *
 from wechat.models import Activity
 from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
+from django.core.management import execute_from_command_line
 
 
 class CustomWeChatView(WeChatView):
     lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
 
     handlers = [
-        HelpOrSubscribeHandler, UnbindOrUnsubscribeHandler, BindAccountHandler, BookEmptyHandler,
+        HelpOrSubscribeHandler, UnbindOrUnsubscribeHandler, BindAccountHandler, BookEmptyHandler,BookWhatHandler,GetTicketHandler,BookHeaderHandler
     ]
 
     error_message_handler = ErrorHandler
@@ -79,6 +80,8 @@ class CustomWeChatView(WeChatView):
                 'name': act['name'],
                 'key': cls.event_keys['book_header'] + str(act['id']),
             })
+        execute_from_command_line(["manage.py", "syncmenu"])
+
 
     @classmethod
     def update_menu(cls, activities=None):
