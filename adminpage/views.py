@@ -183,31 +183,49 @@ class ActivityMenu(APIView):
         activity_dict['id'] = activity.id
         activity_dict['name'] = activity.name
         if activity.id in menu_id_list:
-            activity['menuIndex'] = menu_id_list.index(activity.id) + 1
+            activity_dict['menuIndex'] = menu_id_list.index(activity.id) + 1
         else:
-            activity['menuIndex'] = 0
+            activity_dict['menuIndex'] = 0
         return activity_dict
 
     def get_menu_list(self):
-        menu_list = CustomWeChatView.lib.get_wechat_menu()
+        lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
+        menu_list = lib.get_wechat_menu()
+
         menu_book_list = []
         for btn in menu_list:
             if btn['name'] == '抢票':
                 menu_book_list += btn.get('sub_button', list())
+
         menu_id_list = []
         for btn in menu_book_list:
             if 'key' in btn:
                 activity_id = btn['key']
-                if activity_id.startwith(CustomWeChatView.event_keys['book_header']):
+                if activity_id.startswith(CustomWeChatView.event_keys['book_header']):
                     activity_id = activity_id[len(CustomWeChatView.event_keys['book_header']):]
                 if activity_id and activity_id.isdigit():
                     menu_id_list.append(int(activity_id))
 
+        return menu_id_list
+
     def get(self):
-        pass
+        menu_id_list = self.get_menu_list()
+        activity_list = Activity.objects.filter(Q(status=Activity.STATUS_PUBLISHED) & Q(book_start__lt=datetime.datetime.now()) & Q(book_end__gt=datetime.datetime.now()))
+        activity_dict_list = []
+        for activity in activity_list:
+            activity_dict_list.append(self.activity_to_dict(activity, menu_id_list))
+
+        return activity_dict_list
 
     def post(self):
-        pass
+        activity_list = []
+        for id in self.input:
+            try:
+                activity = Activity.objects.get(id=id)
+            except Activity.DoesNotExist:
+                raise NotExistError("activity menu error: (post) activity not found")
+            activity_list.append(activity)
+        CustomWeChatView.update_menu(activity_list)
 
 class ActivityCheckin(APIView):
 

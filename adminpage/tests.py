@@ -227,3 +227,10 @@ class ActivityCreateTestCase(TestCase):
 
     def tearDown(self):
         Activity.objects.get(name=self.dict_1['name']).delete()
+
+class ActivityMenuTestCase(TestCase):
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
