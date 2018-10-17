@@ -5,6 +5,9 @@ from wechat.models import User
 
 
 class UserBind(APIView):
+    def validate_user(self):
+        pass
+
     def get(self):
         self.check_input('openid')
         openid=self.input['openid']
