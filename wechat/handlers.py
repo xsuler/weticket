@@ -5,7 +5,7 @@ from wechat.models import Activity,Ticket,User
 from django.db.models import Q
 import datetime, time
 from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
-from codex.baseerror import BookFailedError
+from codex.baseerror import BookFailedError, ReturnFailedError
 
 __author__ = "Epsirom"
 
@@ -155,3 +155,49 @@ class BookTicketHandler(WeChatHandler):
             raise BookFailedError("Book ticket handler error: ticket creation failed")
 
         return self.reply_text(self.get_message('book_success'))
+
+
+class ReturnTicketHandler(WeChatHandler):
+    # 退票
+    def check(self):
+        lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
+        menu_list = lib.get_wechat_menu()[-1]['sub_button']
+        event_keys = [book_btn['key'] for book_btn in menu_list]
+        return self.is_text_command("退票") or self.is_event_click(*event_keys)
+
+    def handle(self):
+        activity_name = self.get_first_param_in_command()
+        activity = Activity.objects.get(name=activity_name)
+
+        # user
+        if self.user.student_id == "":
+            # 未绑定学号
+            return self.reply_text(self.get_message('student_id_not_bind'))
+
+        # activity
+        if not activity:
+            # 活动不存在或活动名输入错误
+            return self.reply_text(self.get_message('activity_not_exist'))
+        if time.time() < activity.book_start.timestamp():
+            # 票尚未放出
+            return self.reply_text(self.get_message('book_not_start'))
+        if time.time() > activity.start_time.timestamp():
+            # 活动已经开始
+            return self.reply_text(self.get_message('activity_already_start'))
+
+        # ticket
+        if Ticket.objects.filter(Q(student_id=self.user.student_id) & Q(activity=activity)).exists():
+            # 本学号有票
+            activity.remain_tickets = activity.remain_tickets + 1
+            activity.save()
+        else:
+            return self.reply_text(self.get_message('ticket_not_exist'))
+
+        try:
+            ticket = Ticket.objects.get(Q(student_id=self.user.student_id) & Q(activity=activity))
+            ticket.status = Ticket.STATUS_CANCELLED
+            ticket.save()
+        except:
+            raise ReturnFailedError("Return ticket handler error: ticket return failed")
+
+        return self.reply_text(self.get_message('return_success'))

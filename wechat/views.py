@@ -56,7 +56,13 @@ class CustomWeChatView(WeChatView):
             {
                 "name": "抢票",
                 "sub_button": []
+            },
+
+            {
+                "name": "退票",
+                "sub_button": []
             }
+
         ]
     }
 
