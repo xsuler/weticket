@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-from wechat.wrapper import WeChatHandler
+from wechat.wrapper import WeChatHandler, WeChatLib, WeChatView
 from wechat.models import Activity,Ticket,User
 from django.db.models import Q
 import datetime, time
-from WeChatTicket import settings
+from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
+from codex.baseerror import BookFailedError, NotExistError
 
 __author__ = "Epsirom"
 
@@ -88,22 +89,66 @@ class GetTicketHandler(WeChatHandler):
         return self.is_event_click(self.view.event_keys['get_ticket'])
 
     def handle(self):
-        tickets=[]
+        tickets = []
         if User.objects.filter(open_id=self.user.open_id).exists():
-            user= User.objects.get(open_id=self.user.open_id)
-            tickets =Ticket.objects.filter(Q(student_id=user.student_id))
-        news=[]
+            user = User.objects.get(open_id=self.user.open_id)
+            tickets = Ticket.objects.filter(Q(student_id=user.student_id))
+        news = []
         for ticket in tickets:
             news.append(self.ticket_to_new(ticket))
         return self.reply_news(news)
 
-class BookHeaderHandler(WeChatHandler):
 
+class BookHeaderHandler(WeChatHandler):
+    # 抢票
     def check(self):
-        if self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'][:17] == self.view.event_keys['book_header']):
-            return True
-        return False
+        return (self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'][:17] == self.view.event_keys['book_header'])) or self.is_text_command("抢票")
 
     def handle(self):
-        activity = Activity.objects.get(pk=int(self.input['EventKey'][17:]))
-        return self.reply_single_news(self.activity_to_new(activity))
+        if self.is_event('CLICK'):
+            activity_id = int(self.input['EventKey'][len(WeChatView.CustomWeChatView.event_keys['book_header']):])
+            try:
+                activity = Activity.objects.get(id=activity_id)
+            except Activity.DoesNotExist:
+                raise NotExistError
+        else:
+            activity_name = self.get_first_param_in_command()
+            try:
+                activity = Activity.objects.get(name=activity_name)
+            except Activity.DoesNotExist:
+                raise NotExistError
+
+        # user
+        if self.user.student_id == "":
+            # 未绑定学号
+            return self.reply_text(self.get_message('student_id_not_bind'))
+
+        # activity
+        if not activity:
+            # 活动不存在或活动名输入错误
+            return self.reply_text(self.get_message('activity_not_exist'))
+        if time.time() < activity.book_start.timestamp():
+            # 还未到抢票开始时间
+            return self.reply_text(self.get_message('book_not_start'))
+        if time.time() > activity.book_end.timestamp():
+            # 已经超过了抢票开始时间
+            return self.reply_text(self.get_message('book_already_finish'))
+        if activity.remain_tickets <= 0:
+            # 票已抢光
+            return self.reply_text(self.get_message('tickets_out'))
+
+        # ticket
+        if Ticket.objects.filter(Q(student_id=self.user.student_id) & Q(activity=activity)).exists():
+            # 本学号已经抢过票
+            return self.reply_text(self.get_message('already_book_tickets', self.user))
+
+        activity.remain_tickets = activity.remain_tickets - 1
+        activity.save()
+
+        try:
+            Ticket.objects.create(student_id=self.user.student_id, unique_id=self.user.student_id+activity_name,
+                                  activity=activity, status=Ticket.STATUS_VALID)
+        except:
+            raise BookFailedError("Book ticket handler error: ticket creation failed")
+
+        return self.reply_text(self.get_message('book_success'))
