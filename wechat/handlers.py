@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 #
-from wechat.wrapper import WeChatHandler, WeChatLib
+from wechat.wrapper import WeChatHandler, WeChatLib, WeChatView
 from wechat.models import Activity,Ticket,User
 from django.db.models import Q
 import datetime, time
 from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
-from codex.baseerror import BookFailedError
+from codex.baseerror import BookFailedError, NotExistError
 
 __author__ = "Epsirom"
 
@@ -118,8 +118,18 @@ class BookTicketHandler(WeChatHandler):
         return self.is_text_command("抢票") or self.is_event_click(*event_keys)
 
     def handle(self):
-        activity_name = self.get_first_param_in_command()
-        activity = Activity.objects.get(name=activity_name)
+        if self.is_event('CLICK'):
+            activity_id = int(self.input['EventKey'][len(WeChatView.CustomWeChatView.event_keys['book_header']):])
+            try:
+                activity = Activity.objects.get(id=activity_id)
+            except Activity.DoesNotExist:
+                raise NotExistError
+        else:
+            activity_name = self.get_first_param_in_command()
+            try:
+                activity = Activity.objects.get(name=activity_name)
+            except Activity.DoesNotExist:
+                raise NotExistError
 
         # user
         if self.user.student_id == "":
