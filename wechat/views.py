@@ -80,7 +80,6 @@ class CustomWeChatView(WeChatView):
                 'name': act['name'],
                 'key': cls.event_keys['book_header'] + str(act['id']),
             })
-        # execute_from_command_line(["manage.py", "syncmenu"])
 
 
     @classmethod

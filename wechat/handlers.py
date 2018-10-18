@@ -98,24 +98,11 @@ class GetTicketHandler(WeChatHandler):
             news.append(self.ticket_to_new(ticket))
         return self.reply_news(news)
 
+
 class BookHeaderHandler(WeChatHandler):
-
-    def check(self):
-        if self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'][:17] == self.view.event_keys['book_header']):
-            return True
-        return False
-
-    def handle(self):
-        activity = Activity.objects.get(pk=int(self.input['EventKey'][17:]))
-        return self.reply_single_news(self.activity_to_new(activity))
-
-class BookTicketHandler(WeChatHandler):
     # 抢票
     def check(self):
-        lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
-        menu_list = lib.get_wechat_menu()[-1]['sub_button']
-        event_keys = [book_btn['key'] for book_btn in menu_list]
-        return self.is_text_command("抢票") or self.is_event_click(*event_keys)
+        return (self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'][:17] == self.view.event_keys['book_header'])) or self.is_text_command("抢票")
 
     def handle(self):
         if self.is_event('CLICK'):

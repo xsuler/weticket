@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Q
 import datetime, time
 from django.utils import timezone
+from WeChatTicket import settings
 
 class LoginRequired(object):
     @method_decorator(login_required)
@@ -241,9 +242,7 @@ class ImageUpload(LoginRequired,APIView):
         img = ActivityImage.objects.create(image=self.input['image'][0])
         file_content = ContentFile(img.image.read())
         img.save()
-        hd = self.request.is_secure() and "https://" or "http://"
-        print(hd)
-        return hd+self.request.get_host()+'/'+img.image.url
+        return settings.get_url('u')[:-1]+img.image.url[7:]
 
 
 # a/activity/checkin
