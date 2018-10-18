@@ -103,6 +103,8 @@ class WeChatHandler(object):
         new['Url'] = settings.get_url('u/ticket?ticket='+str(ticket.unique_id))+'&openid='+str(self.user.open_id)
         return new
 
+    def get_first_param_in_command(self):
+        return self.input['Content'].split()[1]
 
 
 class WeChatEmptyHandler(WeChatHandler):

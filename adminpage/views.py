@@ -12,6 +12,7 @@ from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
 from django.utils.decorators import method_decorator
 from django.db.models import Q
 import datetime, time
+from django.utils import timezone
 
 class LoginRequired(object):
     @method_decorator(login_required)
@@ -215,7 +216,8 @@ class ActivityMenu(LoginRequired,APIView):
 
     def get(self):
         menu_id_list = self.get_menu_list()
-        activity_list = Activity.objects.filter(Q(status=Activity.STATUS_PUBLISHED) & Q(book_start__lt=datetime.datetime.now()) & Q(book_end__gt=datetime.datetime.now()))
+        activity_list = Activity.objects.filter(Q(status=Activity.STATUS_PUBLISHED) &
+                                                Q(book_start__lt=timezone.now()) & Q(book_end__gt=timezone.now()))
         activity_dict_list = []
         for activity in activity_list:
             activity_dict_list.append(self.activity_to_dict(activity, menu_id_list))
@@ -226,7 +228,7 @@ class ActivityMenu(LoginRequired,APIView):
         activity_list = []
         for iid in self.input:
             try:
-                activity = Activity.objects.get(pk=iid)
+                activity = Activity.objects.get(id=iid)
             except Activity.DoesNotExist:
                 raise NotExistError("activity menu error: (post) activity not found")
             activity_list.append(activity)

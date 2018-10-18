@@ -12,7 +12,7 @@ class UserBind(APIView):
         self.check_input('openid')
         openid=self.input['openid']
         if User.objects.filter(open_id=self.input['openid']).exists():
-            return user.student_id
+            return User.objects.filter(open_id=self.input['openid']).student_id
         else:
             user=User.objects.create(open_id=self.input['openid'],student_id="")
             user.save()

@@ -38,6 +38,7 @@ class NotExistError(BaseError):
 
     def __init__(self, msg):
         super(NotExistError, self).__init__(4, msg)
+
 class AdminAuthError(BaseError):
 
     def __init__(self, msg):
@@ -47,3 +48,8 @@ class AdminNotLogin(BaseError):
 
     def __init__(self, msg):
         super(AdminNotLogin, self).__init__(4, msg)
+
+class BookFailedError(BaseError):
+
+    def __init__(self, msg):
+        super(BookFailedError, self).__init__(7, msg)
