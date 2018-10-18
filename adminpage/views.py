@@ -75,7 +75,7 @@ class ActivityDelete(LoginRequired,APIView):
     def post(self):
         self.check_input('id')
         try:
-            activity = Activity.objects.get(id=self.input['id'])
+            activity = Activity.objects.get(pk=self.input['id'])
         except Activity.DoesNotExist:
             raise NotExistError("activity delete error: not exist")
         if activity.status == Activity.STATUS_DELETED:
@@ -136,7 +136,7 @@ class ActivityDetail(LoginRequired,APIView):
     def get(self):
         self.check_input('id')
         try:
-            activity = Activity.objects.get(id=self.input['id'])
+            activity = Activity.objects.get(pk=self.input['id'])
         except Activity.DoesNotExist:
             raise NotExistError("activity detail error: not exist")
         if activity.status == Activity.STATUS_DELETED:
@@ -148,7 +148,7 @@ class ActivityDetail(LoginRequired,APIView):
                          'startTime', 'endTime', 'bookStart', 'bookEnd',
                          'totalTickets', 'status')
         try:
-            activity = Activity.objects.get(id=self.input['id'])
+            activity = Activity.objects.get(pk=self.input['id'])
         except Activity.DoesNotExist:
             raise NotExistError("activity detail change error: not exist")
         self.dict_to_exist_activity(activity)
@@ -224,9 +224,9 @@ class ActivityMenu(LoginRequired,APIView):
 
     def post(self):
         activity_list = []
-        for id in self.input:
+        for iid in self.input:
             try:
-                activity = Activity.objects.get(id=id)
+                activity = Activity.objects.get(pk=iid)
             except Activity.DoesNotExist:
                 raise NotExistError("activity menu error: (post) activity not found")
             activity_list.append(activity)
@@ -248,7 +248,7 @@ class ImageUpload(LoginRequired,APIView):
 class ActivityCheckin(LoginRequired,APIView):
     def checkTicket(self):
         ticket = Ticket.objects.get(unique_id=self.input['ticket'])
-        activity = Activity.objects.get(id=self.input['actId'])
+        activity = Activity.objects.get(pk=self.input['actId'])
         if ticket.activity == activity and ticket.status == Ticket.STATUS_VALID:
             ticket_info = {'ticket': self.input['ticket'], 'studentId': ticket.student_id}
             ticket.status = Ticket.STATUS_USED
@@ -259,7 +259,7 @@ class ActivityCheckin(LoginRequired,APIView):
 
     def checkStudentId(self):
         ticket_list = Ticket.objects.filter(student_id=self.input['studentId'])
-        activity = Activity.objects.get(id=self.input['actId'])
+        activity = Activity.objects.get(pk=self.input['actId'])
         for ticket in ticket_list:
             if ticket.activity == activity and ticket.status == Ticket.STATUS_VALID:
                 ticket_info = {'ticket': ticket.unique_id, 'studentId': ticket.student_id}

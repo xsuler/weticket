@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 #
 from wechat.wrapper import WeChatHandler
-
+from wechat.models import Activity,Ticket,User
+from django.db.models import Q
+import datetime, time
+from WeChatTicket import settings
 
 __author__ = "Epsirom"
 
@@ -48,7 +51,6 @@ class UnbindOrUnsubscribeHandler(WeChatHandler):
         self.user.save()
         return self.reply_text(self.get_message('unbind_account'))
 
-
 class BindAccountHandler(WeChatHandler):
 
     def check(self):
@@ -65,3 +67,43 @@ class BookEmptyHandler(WeChatHandler):
 
     def handle(self):
         return self.reply_text(self.get_message('book_empty'))
+
+class BookWhatHandler(WeChatHandler):
+
+    def check(self):
+        return self.is_event_click(self.view.event_keys['book_what'])
+
+
+    def handle(self):
+        activity_list = Activity.objects.filter(Q(status=Activity.STATUS_PUBLISHED) & Q(book_start__lt=datetime.datetime.now()) & Q(book_end__gt=datetime.datetime.now()))
+        news=[]
+        for activity in activity_list:
+            news.append(self.activity_to_new(activity))
+        return self.reply_news(news)
+
+
+class GetTicketHandler(WeChatHandler):
+
+    def check(self):
+        return self.is_event_click(self.view.event_keys['get_ticket'])
+
+    def handle(self):
+        tickets=[]
+        if User.objects.filter(open_id=self.user.open_id).exists():
+            user= User.objects.get(open_id=self.user.open_id)
+            tickets =Ticket.objects.filter(Q(student_id=user.student_id))
+        news=[]
+        for ticket in tickets:
+            news.append(self.ticket_to_new(ticket))
+        return self.reply_news(news)
+
+class BookHeaderHandler(WeChatHandler):
+
+    def check(self):
+        if self.is_msg_type('event') and (self.input['Event'] == 'CLICK') and (self.input['EventKey'][:17] == self.view.event_keys['book_header']):
+            return True
+        return False
+
+    def handle(self):
+        activity = Activity.objects.get(pk=int(self.input['EventKey'][17:]))
+        return self.reply_single_news(self.activity_to_new(activity))
