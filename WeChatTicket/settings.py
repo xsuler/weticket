@@ -118,8 +118,8 @@ DATABASES = {
         'PORT': CONFIGS['DB_PORT'],
     }
 }
-
-
+LOGIN_REDIRECT_URL='/a/activity/list'
+LOGIN_URL='/a/login'
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 

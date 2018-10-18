@@ -10,3 +10,5 @@ def rename(instance, filename):
 
 class ActivityImage(models.Model):
     image = models.ImageField(upload_to = rename, default = 'static/activity_image/None/no-img.jpg')
+
+
