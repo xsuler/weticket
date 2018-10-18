@@ -189,8 +189,7 @@ class ActivityMenu(APIView):
         return activity_dict
 
     def get_menu_list(self):
-        lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
-        menu_list = lib.get_wechat_menu()
+        menu_list = CustomWeChatView.lib.get_wechat_menu()
 
         menu_book_list = []
         for btn in menu_list:
