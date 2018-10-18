@@ -1,5 +1,5 @@
 # weticket
-![](https://travis-ci.com/xsuler/weticket.svg?token=cFt54ERNepPSvedRqZ7s&branch=master)
+![](https://travis-ci.com/xsuler/weticket.svg?token=cFt54ERNepPSvedRqZ7s&branch=sule_dev)
 
 -----
 # 公众号二维码
