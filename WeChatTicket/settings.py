@@ -38,7 +38,7 @@ WECHAT_TOKEN = CONFIGS['WECHAT_TOKEN']
 WECHAT_APPID = CONFIGS['WECHAT_APPID']
 WECHAT_SECRET = CONFIGS['WECHAT_SECRET']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['721619.iterator-traits.com','127.0.0.1:8000']
 
 
 # Application definition
@@ -75,7 +75,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
         ],
-        'APP_DIRS': True,
+       # 'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -83,6 +83,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+	'loaders' : (
+		'admin_tools.template_loaders.Loader',
+		'django.template.loaders.filesystem.Loader',
+		'django.template.loaders.app_directories.Loader',
+	),
         },
     },
 ]
@@ -113,8 +118,8 @@ DATABASES = {
         'PORT': CONFIGS['DB_PORT'],
     }
 }
-
-
+LOGIN_REDIRECT_URL='/a/activity/list'
+LOGIN_URL='/a/login'
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 

@@ -89,6 +89,25 @@ class WeChatHandler(object):
     def url_bind(self):
         return settings.get_url('u/bind', {'openid': self.user.open_id})
 
+    def activity_to_new(self, activity):
+        new = {}
+        new['Title'] = activity.name
+        new['Description'] = activity.description
+        new['Url'] = settings.get_url('u/activity?id='+str(activity.id))
+        new['PicUrl'] = activity.pic_url
+        return new
+
+    def ticket_to_new(self, ticket):
+        new = {}
+        activity = ticket.activity
+        new['Title'] = activity.name
+        new['Description'] = activity.description
+        new['Url'] = settings.get_url('u/ticket?ticket='+str(ticket.unique_id))+'&openid='+str(self.user.open_id)
+        return new
+
+    def get_first_param_in_command(self):
+        return self.input['Content'].split()[1]
+
 
 class WeChatEmptyHandler(WeChatHandler):
 
@@ -114,7 +133,7 @@ class WeChatLib(object):
 
     logger = logging.getLogger('wechatlib')
     access_token = ''
-    access_token_expire = datetime.datetime.fromtimestamp(0)
+    access_token_expire = datetime.datetime.fromtimestamp(86400)
     token = WECHAT_TOKEN
     appid = WECHAT_APPID
     secret = WECHAT_SECRET
