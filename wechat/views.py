@@ -10,7 +10,7 @@ class CustomWeChatView(WeChatView):
     lib = WeChatLib(WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET)
 
     handlers = [
-        HelpOrSubscribeHandler, UnbindOrUnsubscribeHandler, BindAccountHandler, BookEmptyHandler,BookWhatHandler,GetTicketHandler,BookHeaderHandler
+        HelpOrSubscribeHandler, UnbindOrUnsubscribeHandler, BindAccountHandler, BookEmptyHandler,BookWhatHandler,GetTicketHandler,BookHeaderHandler,ReturnTicketHandler,CheckTicketHandler
     ]
 
     error_message_handler = ErrorHandler
@@ -56,7 +56,13 @@ class CustomWeChatView(WeChatView):
             {
                 "name": "抢票",
                 "sub_button": []
+            },
+
+            {
+                "name": "退票",
+                "sub_button": []
             }
+
         ]
     }
 
@@ -80,7 +86,6 @@ class CustomWeChatView(WeChatView):
                 'name': act['name'],
                 'key': cls.event_keys['book_header'] + str(act['id']),
             })
-        # execute_from_command_line(["manage.py", "syncmenu"])
 
 
     @classmethod

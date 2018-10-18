@@ -53,3 +53,8 @@ class BookFailedError(BaseError):
 
     def __init__(self, msg):
         super(BookFailedError, self).__init__(7, msg)
+
+class ReturnFailedError(BaseError):
+
+    def __init__(self, msg):
+        super(ReturnFailedError, self).__init__(7, msg)
