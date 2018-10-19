@@ -1,3 +1,19 @@
 from django.test import TestCase
 
-# Create your tests here.
+class GetTicketTestCase(TestCase):
+    def setUp(self):
+        pass
+
+
+
+    def tearDown(self):
+        pass
+
+class ReturnTicketTestCase(TestCase):
+    def setUp(self):
+        pass
+
+
+
+    def tearDown(self):
+        pass
