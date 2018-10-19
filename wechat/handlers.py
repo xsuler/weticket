@@ -173,7 +173,10 @@ class ReturnTicketHandler(WeChatHandler):
         return self.is_text_command("退票")
 
     def handle(self):
-        activity_name = self.get_first_param_in_command()
+        try:
+            activity_name = self.get_first_param_in_command()
+        except:
+            return self.reply_text((self.get_message('book_format_wrong')))
         activity = Activity.objects.get(name=activity_name)
 
         # user
@@ -219,7 +222,10 @@ class GetTicketHandler(WeChatHandler):
         return self.is_text_command("取票")
 
     def handle(self):
-        activity_name = self.get_first_param_in_command()
+        try:
+            activity_name = self.get_first_param_in_command()
+        except:
+            return self.reply_text((self.get_message('book_format_wrong')))
         activity = Activity.objects.get(name=activity_name)
         # user
         if self.user.student_id == "":
