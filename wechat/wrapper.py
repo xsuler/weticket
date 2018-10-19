@@ -99,7 +99,9 @@ class WeChatHandler(object):
 
     def ticket_to_new(self, ticket):
         new = {}
-        new['Title'] = ticket.activityName
+        activity = ticket.activity
+        new['Title'] = activity.name
+        new['Description'] = activity.description
         new['Url'] = settings.get_url('u/ticket?ticket='+str(ticket.unique_id))+'&openid='+str(self.user.open_id)
         return new
 
