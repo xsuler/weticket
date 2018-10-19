@@ -227,6 +227,7 @@ class WeChatView(BaseView):
         if self.request.method == 'GET':
             return HttpResponse(self.request.GET['echostr'])
         elif self.request.method == 'POST':
+            print(self.request.POST)
             return HttpResponse(self.handle_wechat_msg(), content_type='application/xml')
         else:
             return self.http_method_not_allowed()

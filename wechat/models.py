@@ -16,7 +16,7 @@ class User(models.Model):
 
 
 class Activity(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128,unique=True)
     key = models.CharField(max_length=64, db_index=True)
     description = models.TextField()
     start_time = models.DateTimeField()
