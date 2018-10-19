@@ -283,7 +283,49 @@ class ActivityCreateTestCase(TestCase):
 
 class ActivityMenuTestCase(TestCase):
     def setUp(self):
-        pass
+        Activity.objects.create(id=1, name="a_l_test_1", key="key", description="description",
+                                start_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                end_time=datetime.datetime(2018, 11, 16, 0, 0, 0, 0),
+                                place="place",
+                                book_start=timezone.now(),
+                                book_end=datetime.datetime(2018, 11, 14, 0, 0, 0, 0),
+                                total_tickets=10, status=Activity.STATUS_DELETED, pic_url="", remain_tickets=10)
+        Activity.objects.create(id=2, name="a_l_test_2", key="key", description="description",
+                                start_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                end_time=datetime.datetime(2018, 11, 16, 0, 0, 0, 0),
+                                place="place",
+                                book_start=timezone.now(),
+                                book_end=datetime.datetime(2018, 11, 14, 0, 0, 0, 0),
+                                total_tickets=10, status=Activity.STATUS_SAVED, pic_url="", remain_tickets=10)
+        Activity.objects.create(id=3, name="a_l_test_3", key="key", description="description",
+                                start_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                end_time=datetime.datetime(2018, 11, 16, 0, 0, 0, 0),
+                                place="place",
+                                book_start=timezone.now(),
+                                book_end=datetime.datetime(2018, 11, 14, 0, 0, 0, 0),
+                                total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="",
+                                remain_tickets=10)
+        Activity.objects.create(id=4, name="a_l_test_4", key="key", description="description",
+                                start_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                end_time=datetime.datetime(2018, 11, 16, 0, 0, 0, 0),
+                                place="place",
+                                book_start=timezone.now(),
+                                book_end=timezone.now(),
+                                total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="",
+                                remain_tickets=10)
+        Activity.objects.create(id=5, name="a_l_test_5", key="key", description="description",
+                                start_time=datetime.datetime(2018, 11, 15, 0, 0, 0, 0),
+                                end_time=datetime.datetime(2018, 11, 16, 0, 0, 0, 0),
+                                place="place",
+                                book_start=datetime.datetime(2018, 11, 13, 0, 0, 0, 0),
+                                book_end=datetime.datetime(2018, 11, 14, 0, 0, 0, 0),
+                                total_tickets=10, status=Activity.STATUS_PUBLISHED, pic_url="",
+                                remain_tickets=10)
+
+    def testActivityMenu_activityList(self):
+        activity_list = ActivityMenu().get()
+        self.assertEqual(len(activity_list), 1)
+        self.assertEqual(activity_list[0]['id'], 3)
 
     def tearDown(self):
         pass
