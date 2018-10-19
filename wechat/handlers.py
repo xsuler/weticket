@@ -117,10 +117,7 @@ class BookHeaderHandler(WeChatHandler):
                 activity_name = self.get_first_param_in_command()
             except:
                 return self.reply_text((self.get_message('book_format_wrong')))
-            try:
-                activity = Activity.objects.get(name=activity_name)
-            except Activity.DoesNotExist:
-                raise NotExistError
+            activity = Activity.objects.get(name=activity_name)
 
         # user
         if self.user.student_id == "":
