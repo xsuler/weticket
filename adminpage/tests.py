@@ -323,13 +323,16 @@ class ActivityMenuTestCase(TestCase):
                                 remain_tickets=10)
 
     def testActivityMenu_activityList(self):
-        # activity_list = ActivityMenu().get()
-        # self.assertEqual(len(activity_list), 1)
-        # self.assertEqual(activity_list[0]['id'], 3)
-        pass
+        activity_list = ActivityMenu().get()
+        self.assertEqual(len(activity_list), 1)
+        self.assertEqual(activity_list[0]['id'], 3)
 
     def tearDown(self):
-        pass
+        Activity.objects.get(id=1).delete()
+        Activity.objects.get(id=2).delete()
+        Activity.objects.get(id=3).delete()
+        Activity.objects.get(id=4).delete()
+        Activity.objects.get(id=5).delete()
 
 class ActivityCheckinTest(TestCase):
 

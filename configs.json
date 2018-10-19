@@ -1,14 +1,14 @@
 {
-  "SECRET_KEY": "ThisIsARandomStringWithLength=50!-----------------",
+  "SECRET_KEY": "ThismsARandomStringtithLength=50!-!---------------",
   "DEBUG": true,
   "IGNORE_WECHAT_SIGNATURE": false,
-  "WECHAT_TOKEN": "ThisIsAWeChatTokenWhichCanBeARandomString",
-  "WECHAT_APPID": "PleaseCopyFromWebsite",
-  "WECHAT_SECRET": "PleaseCopyFromWebsite",
+  "WECHAT_TOKEN": "aAsdkc!w2566SDXww_=aDDadajkn54",
+  "WECHAT_APPID": "wx067e8484745a2dc0",
+  "WECHAT_SECRET": "84e147f1cae508a31b7951d11e5b76be",
   "DB_NAME": "wechat_ticket",
   "DB_USER": "root",
-  "DB_PASS": "",
-  "DB_HOST": "127.0.0.1",
+  "DB_PASS": "game_fun",
+  "DB_HOST": "721619.iterator-traits.com",
   "DB_PORT": "3306",
-  "SITE_DOMAIN": "http://your.domain"
+  "SITE_DOMAIN": "http://wojiushiyishi.3w.dkys.org"
 }
