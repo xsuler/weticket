@@ -125,7 +125,10 @@ class BookTicketHandler(WeChatHandler):
             except Activity.DoesNotExist:
                 raise NotExistError
         else:
-            activity_name = self.get_first_param_in_command()
+            try:
+                activity_name = self.get_first_param_in_command()
+            except:
+                return self.reply_text((self.get_message('book_format_wrong')))
             try:
                 activity = Activity.objects.get(name=activity_name)
             except Activity.DoesNotExist:
