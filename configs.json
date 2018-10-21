@@ -1,14 +1,14 @@
 {
-  "SECRET_KEY": "ThismsARandomStringtithLength=50!-!---------------",
+  "SECRET_KEY": "ThisIsARandomStringWithLength=50!-----------------",
   "DEBUG": true,
-  "IGNORE_WECHAT_SIGNATURE": true,
-  "WECHAT_TOKEN": "DXwwaDDadajkn54",
-  "WECHAT_APPID": "wx076962edb984e6ca",
-  "WECHAT_SECRET": "75946763cab56e5a76d0a319270e9f54",
+  "IGNORE_WECHAT_SIGNATURE": false,
+  "WECHAT_TOKEN": "ThisIsAWeChatTokenWhichCanBeARandomString",
+  "WECHAT_APPID": "PleaseCopyFromWebsite",
+  "WECHAT_SECRET": "PleaseCopyFromWebsite",
   "DB_NAME": "wechat_ticket",
   "DB_USER": "root",
-  "DB_PASS": "game_fun",
-  "DB_HOST": "721619.iterator-traits.com",
+  "DB_PASS": "",
+  "DB_HOST": "127.0.0.1",
   "DB_PORT": "3306",
-  "SITE_DOMAIN": "http://2z23941j40.imwork.net/wechat"
+  "SITE_DOMAIN": "http://your.domain"
 }
