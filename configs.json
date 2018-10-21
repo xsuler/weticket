@@ -3,12 +3,12 @@
   "DEBUG": true,
   "IGNORE_WECHAT_SIGNATURE": true,
   "WECHAT_TOKEN": "DXwwaDDadajkn54",
-  "WECHAT_APPID": "wx076962edb984e6ca",
-  "WECHAT_SECRET": "75946763cab56e5a76d0a319270e9f54",
+  "WECHAT_APPID": "wx33333333334e6ca",
+  "WECHAT_SECRET": "75946763ca9999999999970e9f54",
   "DB_NAME": "wechat_ticket",
   "DB_USER": "root",
-  "DB_PASS": "game_fun",
-  "DB_HOST": "721619.iterator-traits.com",
+  "DB_PASS": "",
+  "DB_HOST": "127.0.0.1",
   "DB_PORT": "3306",
-  "SITE_DOMAIN": "http://2z23941j40.imwork.net/wechat"
+  "SITE_DOMAIN": ""
 }
