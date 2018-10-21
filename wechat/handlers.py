@@ -7,6 +7,8 @@ import datetime, time
 from WeChatTicket.settings import WECHAT_TOKEN, WECHAT_APPID, WECHAT_SECRET
 import uuid
 from codex.baseerror import BookFailedError, NotExistError,ReturnFailedError
+from django_mysql.exceptions import TimeoutError
+from django_mysql.locks import Lock
 
 __author__ = "Epsirom"
 
@@ -113,11 +115,11 @@ class BookHeaderHandler(WeChatHandler):
             except Activity.DoesNotExist:
                 raise NotExistError
         else:
-            activity_name = self.get_first_param_in_command()
             try:
-                activity = Activity.objects.get(name=activity_name)
-            except Activity.DoesNotExist:
-                raise NotExistError
+                activity_name = self.get_first_param_in_command()
+            except:
+                return self.reply_text((self.get_message('book_format_wrong')))
+            activity = Activity.objects.get(name=activity_name)
 
         # user
         if self.user.student_id == "":
@@ -152,8 +154,14 @@ class BookHeaderHandler(WeChatHandler):
                 return self.reply_text(self.get_message('book_success'))
 
 
-        activity.remain_tickets = activity.remain_tickets - 1
-        activity.save()
+
+        try:
+            with Lock('book_ticket_lock', acquire_timeout=2.0):
+                activity.remain_tickets = activity.remain_tickets - 1
+                activity.save()
+        except TimeoutError:
+            return self.reply_text('抢票冲突，请稍后再试。')
+
         uniqueid=uuid.uuid3(uuid.NAMESPACE_DNS, self.user.student_id).hex+uuid.uuid3(uuid.NAMESPACE_DNS, activity.name).hex
 
         try:
@@ -170,7 +178,10 @@ class ReturnTicketHandler(WeChatHandler):
         return self.is_text_command("退票")
 
     def handle(self):
-        activity_name = self.get_first_param_in_command()
+        try:
+            activity_name = self.get_first_param_in_command()
+        except:
+            return self.reply_text((self.get_message('book_format_wrong')))
         activity = Activity.objects.get(name=activity_name)
 
         # user
@@ -216,7 +227,10 @@ class GetTicketHandler(WeChatHandler):
         return self.is_text_command("取票")
 
     def handle(self):
-        activity_name = self.get_first_param_in_command()
+        try:
+            activity_name = self.get_first_param_in_command()
+        except:
+            return self.reply_text((self.get_message('book_format_wrong')))
         activity = Activity.objects.get(name=activity_name)
         # user
         if self.user.student_id == "":

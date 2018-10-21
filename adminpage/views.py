@@ -180,7 +180,7 @@ class ActivityCreate(LoginRequired,APIView):
         try:
             self.dict_to_new_activity()
         except:
-            raise InputError(str(self.input))
+            raise InputError('maybe name of activity is already exist')
 
 class ActivityMenu(LoginRequired,APIView):
 
